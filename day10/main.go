@@ -19,6 +19,7 @@ const (
 
 func main() {
 	ratings := loadRatings()
+	sort.Ints(ratings)
 
 	// Part 1
 	var (
@@ -93,6 +94,5 @@ func loadRatings() []int {
 	deviceRating := max + deviceDifferential
 	ratings = append(ratings, deviceRating)
 
-	sort.Ints(ratings)
 	return ratings
 }
