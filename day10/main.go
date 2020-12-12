@@ -18,35 +18,7 @@ const (
 )
 
 func main() {
-	f, err := os.Open(input)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer f.Close()
-
-	var (
-		ratings = []int{outletRating}
-		max     = math.MinInt64
-	)
-	s := bufio.NewScanner(f)
-	for s.Scan() {
-		rating, err := strconv.Atoi(s.Text())
-		if err != nil {
-			log.Fatal(err)
-		}
-		if rating > max {
-			max = rating
-		}
-		ratings = append(ratings, rating)
-	}
-	if err := s.Err(); err != nil {
-		log.Fatal(err)
-	}
-	// Also append our device
-	deviceRating := max + deviceDifferential
-	ratings = append(ratings, deviceRating)
-
-	sort.Ints(ratings)
+	ratings := loadRatings()
 
 	// Part 1
 	var (
@@ -89,4 +61,38 @@ func countPermutations(memo map[int]int, input []int, start, end int) int {
 	}
 	memo[start] = count
 	return count
+}
+
+func loadRatings() []int {
+	f, err := os.Open(input)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	var (
+		ratings = []int{outletRating}
+		max     = math.MinInt64
+	)
+
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		rating, err := strconv.Atoi(s.Text())
+		if err != nil {
+			log.Fatal(err)
+		}
+		if rating > max {
+			max = rating
+		}
+		ratings = append(ratings, rating)
+	}
+	if err := s.Err(); err != nil {
+		log.Fatal(err)
+	}
+	// Also append our device
+	deviceRating := max + deviceDifferential
+	ratings = append(ratings, deviceRating)
+
+	sort.Ints(ratings)
+	return ratings
 }
